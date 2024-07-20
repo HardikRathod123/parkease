@@ -1,5 +1,5 @@
 {
-  "name": "@autospace/sample-lib",
+  "name": "@parkease/sample-lib",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

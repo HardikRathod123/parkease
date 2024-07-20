@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { add } from '@autospace/sample-lib';
+import { add } from '@parkease/sample-lib';
 
 @Injectable()
 export class AppService {
