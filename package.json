@@ -11,7 +11,8 @@
     "lint": "pnpm --parallel -r run lint",
     "build": "pnpm --parallel -r run build",
     "validate": "pnpm format:write && pnpm tsc && pnpm lint && pnpm build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "recreate:dev": "make recreate_no-seed_no-clean stage=development"
   },
   "keywords": [],
   "author": "",
