@@ -1,4 +1,12 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+CURRENT_BRANCH=$(git branch --show-current)
+PROTECTED_BRANCHES="^(development|main|staging)$"
+CODEOWNER=$(git config user.name)
+REPO_ROOT=$(git rev-parse --show-toplevel)
 
 pnpm validate
