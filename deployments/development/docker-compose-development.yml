@@ -4,10 +4,15 @@ services:
     image: postgres
     restart: always
     ports:
-      - '2000:5432'
-    env_file: $BASE_PATH/services/postgres/.env.development  
+      - '2010:5432'
+    # env_file: $BASE_PATH/services/postgres/.env.development
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: password
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     volumes:
       - db_data_parkease:/var/lib/postgresql/data
 volumes:
   db_data_parkease:
-    
