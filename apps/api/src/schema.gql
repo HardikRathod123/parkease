@@ -3,24 +3,31 @@
 # ------------------------------------------------------
 
 type User {
-  uid: String!
+  name: String
 }
 
 type Query {
-  users: [User!]!
-  user(id: Int!): User!
+  users(distinct: [UserScalarFieldEnum!]): [User!]!
+  user: User!
+}
+
+enum UserScalarFieldEnum {
+  uid
+  createdAt
+  updatedAt
+  name
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  removeUser: User!
 }
 
 input CreateUserInput {
-  uid: String!
+  name: String
 }
 
 input UpdateUserInput {
-  uid: String!
+  name: String
 }
