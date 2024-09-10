@@ -24,6 +24,9 @@ input UserWhereInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   name: StringFilter
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
 }
 
 input StringFilter {
@@ -91,6 +94,6 @@ input CreateUserInput {
 }
 
 input UpdateUserInput {
-  uid: String
+  uid: String!
   name: String
 }

@@ -1,14 +1,14 @@
 import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
+    CanActivate,
+    ExecutionContext,
+    Injectable,
+    UnauthorizedException,
 } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { JwtService } from '@nestjs/jwt'
-import { Reflector } from '@nestjs/core'
-import { Role } from 'src/common/types'
 import { PrismaService } from 'src/common/prisma/prisma.service'
+import { Role } from 'src/common/types'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -78,7 +78,9 @@ export class AuthGuard implements CanActivate {
     const roles: Role[] = []
 
     const [admin] = await Promise.all(rolePromises)
-    admin && roles.push('admin')
+    if (admin) {
+      roles.push('admin')
+    }
 
     return roles
   }

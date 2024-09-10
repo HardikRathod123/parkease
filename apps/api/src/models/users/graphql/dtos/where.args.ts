@@ -1,4 +1,4 @@
-import { Field, InputType, PartialType } from '@nestjs/graphql'
+import { InputType, PartialType } from '@nestjs/graphql'
 import { Prisma } from '@prisma/client'
 import {
   DateTimeFilter,
@@ -8,7 +8,6 @@ import {
 
 @InputType()
 export class UserWhereUniqueInput {
-  @Field()
   uid: string
 }
 
@@ -20,15 +19,10 @@ export class UserWhereInputStrict
       Omit<Prisma.UserWhereInput, 'Credentials' | 'AuthProvider' | 'Admin'>
     >
 {
-  @Field(() => StringFilter, { nullable: true })
   uid: StringFilter
-  @Field(() => DateTimeFilter, { nullable: true })
   createdAt: DateTimeFilter
-  @Field(() => DateTimeFilter, { nullable: true })
   updatedAt: DateTimeFilter
-  @Field(() => StringFilter, { nullable: true })
   name: StringFilter
-
   AND: UserWhereInput[]
   OR: UserWhereInput[]
   NOT: UserWhereInput[]
