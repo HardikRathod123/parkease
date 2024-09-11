@@ -23,7 +23,8 @@
         "validate": "make validate",
         "prepare": "husky install",
         "recreate:dev": "make recreate_no-seed_no-clean stage=development",
-        "commit": "yarn cz-customizable"
+        "commit": "yarn cz-customizable",
+        "style": "prettier --write '**/*.{js,jsx,ts,tsx}'"
     },
     "keywords": [],
     "author": "",
@@ -36,8 +37,10 @@
         "commitlint-config-gitmoji": "^2.3.1",
         "cz-customizable": "^7.0.0",
         "eslint": "~8.57.0",
+        "eslint-config-prettier": "^9.1.0",
         "husky": "^8.0.0",
         "nx": "19.7.2",
+        "prettier-plugin-organize-imports": "^4.0.0",
         "typescript": "^5.4.3"
     },
     "config": {
