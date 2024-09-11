@@ -35,5 +35,9 @@
         "cz-customizable": {
             "config": "cz-config.js"
         }
+    },
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "uuid": "^10.0.0"
     }
 }
