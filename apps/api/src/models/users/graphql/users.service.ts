@@ -1,8 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcryptjs'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { v4 as uuid } from 'uuid'
 import {
+  LoginInput,
+  LoginOutput,
   RegisterWithCredentialsInput,
   RegisterWithProviderInput,
 } from './dtos/create-user.input'
@@ -11,7 +18,10 @@ import { UpdateUserInput } from './dtos/update-user.input'
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
   async registerWithProvider({
     image,
     name,
@@ -85,6 +95,43 @@ export class UsersService {
           Credentials: true,
         },
       })
+    } catch (error) {
+      throw new BadRequestException(error.message)
+    }
+  }
+
+  async login({ email, password }: LoginInput): Promise<LoginOutput> {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          Credentials: { email },
+        },
+        include: {
+          Credentials: true,
+        },
+      })
+
+      if (!user) {
+        throw new UnauthorizedException('Invalid email or password.')
+      }
+
+      const isPasswordValid = bcrypt.compareSync(
+        password,
+        user.Credentials.passwordHash,
+      )
+
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid email or password.')
+      }
+
+      const jwtToken = this.jwtService.sign(
+        { uid: user.uid },
+        {
+          algorithm: 'HS256',
+        },
+      )
+
+      return { token: jwtToken }
     } catch (error) {
       throw new BadRequestException(error.message)
     }
