@@ -9,4 +9,4 @@ PROTECTED_BRANCHES="^(development|main|staging)$"
 CODEOWNER=$(git config user.name)
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
-pnpm validate
+yarn validate

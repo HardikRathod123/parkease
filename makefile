@@ -6,6 +6,9 @@ NAME_development=parkease-development
 
 BASE_PATH=$(PWD)
 
+validate:
+	@echo "Validating the codebase"
+	yarn format:write && yarn tsc && yarn lint && yarn build
 
 # This target is used to deploy the services for the specified stage using Docker Compose. The COMPOSE_DOCKER_CLI_BUILD environment variable is set to 1 to enable BuildKit, which is a new feature in Docker that allows for faster and more efficient builds. The BASE_PATH environment variables are set to the base path and the path to the service respectively. The compose file and the project name are determined by the stage.
 deploy:
