@@ -9,7 +9,7 @@ export class UserOrderByWithRelationInputStrict
       UserOrderByWithRelationInputStrict,
       Omit<
         Prisma.UserOrderByWithRelationInput,
-        'Credentials' | 'AuthProvider' | 'Admin' | 'image'
+        'Credentials' | 'AuthProvider' | 'Admin' | 'image' | 'Manager' | 'Valet' | 'Customer'
       >
     >
 {

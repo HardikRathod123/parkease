@@ -23,7 +23,7 @@
         "validate": "make validate",
         "prepare": "husky install",
         "recreate:dev": "make recreate_no-seed_no-clean stage=development",
-        "commit": "yarn dlx cz-customizable"
+        "commit": "yarn cz-customizable"
     },
     "keywords": [],
     "author": "",
