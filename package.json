@@ -1,24 +1,39 @@
 {
-  "name": "parkease",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "scripts": {
-    "format": "prettier \"{apps,libs}/**/*.{ts,tsx,js,json}\" --ignore-path .gitignore",
-    "format:check": "pnpm format --check",
-    "format:write": "pnpm format --write",
-    "tsc": "pnpm --parallel -r run tsc",
-    "lint": "pnpm --parallel -r run lint",
-    "build": "pnpm --parallel -r run build",
-    "validate": "pnpm format:write && pnpm tsc && pnpm lint && pnpm build",
-    "prepare": "husky install",
-    "recreate:dev": "make recreate_no-seed_no-clean stage=development"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.4.3",
-    "husky": "^8.0.0"
-  }
+    "name": "parkease",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "scripts": {
+        "format": "prettier \"{apps,libs}/**/*.{ts,tsx,js,json}\" --ignore-path .gitignore",
+        "format:check": "pnpm format --check",
+        "format:write": "pnpm format --write",
+        "tsc": "pnpm --parallel -r run tsc",
+        "lint": "pnpm --parallel -r run lint",
+        "build": "pnpm --parallel -r run build",
+        "validate": "pnpm format:write && pnpm tsc && pnpm lint && pnpm build",
+        "prepare": "husky install",
+        "recreate:dev": "make recreate_no-seed_no-clean stage=development",
+        "commit": "pnpx cz-customizable",
+        "commitlint": "commitlint --edit"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@commitlint/cli": "^18.6.0",
+        "@commitlint/config-conventional": "^18.6.0",
+        "@commitlint/types": "^19.0.3",
+        "commitlint-config-gitmoji": "^2.3.1",
+        "cz-customizable": "^7.0.0",
+        "husky": "^8.0.0",
+        "typescript": "^5.4.3"
+    },
+    "config": {
+        "commitizen": {
+            "path": "cz-customizable"
+        },
+        "cz-customizable": {
+            "config": "cz-config.js"
+        }
+    }
 }
