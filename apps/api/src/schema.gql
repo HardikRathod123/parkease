@@ -3,10 +3,11 @@
 # ------------------------------------------------------
 
 type User {
+  name: String
+  image: String
   uid: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  name: String
 }
 
 """
@@ -24,12 +25,14 @@ input UserWhereInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   name: StringFilter
+  image: StringFilter
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
 }
 
 input StringFilter {
+  mode: QueryMode
   equals: String
   in: [String!]
   notIn: [String!]
@@ -41,7 +44,6 @@ input StringFilter {
   startsWith: String
   endsWith: String
   not: String
-  mode: QueryMode
 }
 
 enum QueryMode {
@@ -80,6 +82,7 @@ enum UserScalarFieldEnum {
   createdAt
   updatedAt
   name
+  image
 }
 
 type Mutation {
@@ -89,11 +92,11 @@ type Mutation {
 }
 
 input CreateUserInput {
-  uid: String!
   name: String
+  uid: String!
 }
 
 input UpdateUserInput {
-  uid: String!
   name: String
+  uid: String!
 }
