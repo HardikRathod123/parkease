@@ -24,7 +24,8 @@
         "prepare": "husky install",
         "recreate:dev": "make recreate_no-seed_no-clean stage=development",
         "commit": "yarn cz-customizable",
-        "style": "prettier --write '**/*.{js,jsx,ts,tsx}'"
+        "style": "prettier --write '**/*.{js,jsx,ts,tsx}'",
+        "cloc": "npx cloc --exclude-dir=node_modules,dist,build,yarn.lock,package.json,generated.tsx,.next,.nx ."
     },
     "keywords": [],
     "author": "",
