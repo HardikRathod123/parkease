@@ -12,5 +12,12 @@
     "source.organizeImports": "always",
     "source.fixAll": "always"
   },
-  "cSpell.words": ["constate", "HASURA", "raftlabs", "shadcn", "tailwindcss"]
+  "cSpell.words": [
+    "constate",
+    "HASURA",
+    "raftlabs",
+    "shadcn",
+    "tailwindcss",
+    "parkease"
+  ]
 }
