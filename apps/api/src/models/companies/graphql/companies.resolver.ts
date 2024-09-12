@@ -1,8 +1,17 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { checkRowLevelPermission } from 'src/common/auth/util'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { GetUserType } from 'src/common/types'
+import { Garage } from 'src/models/garages/graphql/entity/garage.entity'
+import { Manager } from 'src/models/managers/graphql/entity/manager.entity'
 import { CompaniesService } from './companies.service'
 import { CreateCompanyInput } from './dtos/create-company.input'
 import { FindManyCompanyArgs, FindUniqueCompanyArgs } from './dtos/find.args'
@@ -64,5 +73,15 @@ export class CompaniesResolver {
       company.Managers.map((man) => man.uid),
     )
     return this.companiesService.remove(args)
+  }
+
+  @ResolveField(() => [Garage])
+  garages(@Parent() company: Company) {
+    return this.prisma.garage.findMany({ where: { companyId: company.id } })
+  }
+
+  @ResolveField(() => [Manager])
+  managers(@Parent() company: Company) {
+    return this.prisma.manager.findMany({ where: { companyId: company.id } })
   }
 }

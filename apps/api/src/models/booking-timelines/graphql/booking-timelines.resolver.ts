@@ -1,6 +1,14 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 import { AllowAuthenticated } from 'src/common/auth/auth.decorator'
 import { PrismaService } from 'src/common/prisma/prisma.service'
+import { Booking } from 'src/models/bookings/graphql/entity/booking.entity'
 import { BookingTimelinesService } from './booking-timelines.service'
 import { CreateBookingTimelineInput } from './dtos/create-booking-timeline.input'
 import {
@@ -47,5 +55,12 @@ export class BookingTimelinesResolver {
   @Mutation(() => BookingTimeline)
   async removeBookingTimeline(@Args() args: FindUniqueBookingTimelineArgs) {
     return this.bookingTimelinesService.remove(args)
+  }
+
+  @ResolveField(() => Booking)
+  booking(@Parent() bookingTimeline: BookingTimeline) {
+    return this.prisma.booking.findFirst({
+      where: { id: bookingTimeline.bookingId },
+    })
   }
 }

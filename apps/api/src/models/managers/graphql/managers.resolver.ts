@@ -1,8 +1,16 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { checkRowLevelPermission } from 'src/common/auth/util'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { GetUserType } from 'src/common/types'
+import { Company } from 'src/models/companies/graphql/entity/company.entity'
 import { CreateManagerInput } from './dtos/create-manager.input'
 import { FindManyManagerArgs, FindUniqueManagerArgs } from './dtos/find.args'
 import { UpdateManagerInput } from './dtos/update-manager.input'
@@ -58,5 +66,10 @@ export class ManagersResolver {
     const manager = await this.prisma.manager.findUnique(args)
     checkRowLevelPermission(user, manager.uid)
     return this.managersService.remove(args)
+  }
+
+  @ResolveField(() => Company, { nullable: true })
+  company(@Parent() manager: Manager) {
+    return this.prisma.company.findUnique({ where: { id: manager.companyId } })
   }
 }

@@ -1,8 +1,19 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { checkRowLevelPermission } from 'src/common/auth/util'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { GetUserType } from 'src/common/types'
+import { Admin } from 'src/models/admins/graphql/entity/admin.entity'
+import { Customer } from 'src/models/customers/graphql/entity/customer.entity'
+import { Manager } from 'src/models/managers/graphql/entity/manager.entity'
+import { Valet } from 'src/models/valets/graphql/entity/valet.entity'
 import {
   LoginInput,
   LoginOutput,
@@ -79,5 +90,25 @@ export class UsersResolver {
     const userInfo = await this.prisma.user.findUnique(args)
     checkRowLevelPermission(user, userInfo.uid)
     return this.usersService.remove(args)
+  }
+
+  @ResolveField(() => Admin, { nullable: true })
+  admin(@Parent() user: User) {
+    return this.prisma.admin.findUnique({ where: { uid: user.uid } })
+  }
+
+  @ResolveField(() => Manager, { nullable: true })
+  manager(@Parent() user: User) {
+    return this.prisma.manager.findUnique({ where: { uid: user.uid } })
+  }
+
+  @ResolveField(() => Valet, { nullable: true })
+  valet(@Parent() user: User) {
+    return this.prisma.valet.findUnique({ where: { uid: user.uid } })
+  }
+
+  @ResolveField(() => Customer, { nullable: true })
+  customer(@Parent() user: User) {
+    return this.prisma.customer.findUnique({ where: { uid: user.uid } })
   }
 }

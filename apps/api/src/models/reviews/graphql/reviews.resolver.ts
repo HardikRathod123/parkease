@@ -1,8 +1,16 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { checkRowLevelPermission } from 'src/common/auth/util'
 import { PrismaService } from 'src/common/prisma/prisma.service'
 import { GetUserType } from 'src/common/types'
+import { User } from 'src/models/users/graphql/entity/user.entity'
 import { CreateReviewInput } from './dtos/create-review.input'
 import { FindManyReviewArgs, FindUniqueReviewArgs } from './dtos/find.args'
 import { UpdateReviewInput } from './dtos/update-review.input'
@@ -58,5 +66,10 @@ export class ReviewsResolver {
     const review = await this.prisma.review.findUnique(args)
     checkRowLevelPermission(user, review.customerId)
     return this.reviewsService.remove(args)
+  }
+
+  @ResolveField(() => User)
+  customer(@Parent() review: Review) {
+    return this.prisma.user.findFirst({ where: { uid: review.customerId } })
   }
 }
