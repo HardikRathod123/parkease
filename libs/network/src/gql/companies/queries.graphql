@@ -1,17 +1,3 @@
-mutation RegisterWithCredentials(
-  $registerWithCredentialsInput: RegisterWithCredentialsInput!
-) {
-  registerWithCredentials(
-    registerWithCredentialsInput: $registerWithCredentialsInput
-  ) {
-    updatedAt
-    uid
-    name
-    image
-    createdAt
-  }
-}
-
 query Companies(
   $distinct: [CompanyScalarFieldEnum!]
   $orderBy: [CompanyOrderByWithRelationInput!]

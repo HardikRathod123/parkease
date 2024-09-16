@@ -5,7 +5,7 @@ import { add } from '@parkease/sample-lib'
 
 export default function Home() {
   const { data, loading } = useQuery(CompaniesDocument)
-
+  console.log('data', data)
   return (
     <main>
       Hello {add(343, 3)}
