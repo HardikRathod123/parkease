@@ -53,7 +53,7 @@ export const LoginForm = ({}: ILoginFormProps) => {
       </HtmlLabel>
       <Button type="submit">Sumbit</Button>
       <div className="mt-4 text-sm">
-        Do not have an autospace account?
+        Do not have an parkease account?
         <br />
         <Link
           href="/register"

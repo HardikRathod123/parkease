@@ -1,22 +1,16 @@
 'use client'
 import { useQuery } from '@apollo/client'
 import { CompaniesDocument } from '@parkease/network/src/gql/generated'
-import { add } from '@parkease/sample-lib'
+import { useSession } from 'next-auth/react'
 
 export default function Home() {
   const { data, loading } = useQuery(CompaniesDocument)
   console.log('data', data)
+  const { data: sessionData, status } = useSession()
+
   return (
     <main className="bg-primary">
-      Hello {add(343, 3)}
-      {/* <div>
-        {data?.companies.map((company) => (
-          <div className="p-4 bg-gray-100 rounded" key={company.id}>
-            <div>{company.displayName}</div>
-            <div>{company.description}</div>
-          </div>
-        ))}
-      </div> */}
+      <div>Home page</div>
     </main>
   )
 }
