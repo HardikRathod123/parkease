@@ -1,6 +1,6 @@
 'use client'
 import { useMutation } from '@apollo/client'
-import { useFormRegister } from '@parkease/forms/src/register'
+import { FormTypeRegister, useFormRegister } from '@parkease/forms/src/register'
 import { RegisterWithCredentialsDocument } from '@parkease/network/src/gql/generated'
 import { Role } from '@parkease/util/types'
 import { signIn } from 'next-auth/react'
@@ -25,7 +25,7 @@ export const RegisterForm = ({}: ISignupFormProps) => {
     RegisterWithCredentialsDocument,
   )
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: FormTypeRegister) => {
     const { data, errors } = await registerWithCredentials({
       variables: {
         registerWithCredentialsInput: formData,
