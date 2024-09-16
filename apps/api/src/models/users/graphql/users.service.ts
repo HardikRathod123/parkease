@@ -131,7 +131,7 @@ export class UsersService {
         },
       )
 
-      return { token: jwtToken }
+      return { token: jwtToken, user }
     } catch (error) {
       throw new BadRequestException(error.message)
     }
