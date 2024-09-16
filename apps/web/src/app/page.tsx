@@ -7,7 +7,7 @@ export default function Home() {
   const { data, loading } = useQuery(CompaniesDocument)
   console.log('data', data)
   return (
-    <main>
+    <main className="bg-primary">
       Hello {add(343, 3)}
       {/* <div>
         {data?.companies.map((company) => (
