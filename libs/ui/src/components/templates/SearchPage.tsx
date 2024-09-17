@@ -12,6 +12,7 @@ import { Map } from '../organisms/map/Map'
 import { Panel } from '../organisms/map/Panel'
 import { SearchPlaceBox } from '../organisms/map/SearchPlacesBox'
 import { DefaultZoomControls } from '../organisms/map/ZoomControls'
+import { FilterSidebar } from '../organisms/search/FilterSidebar'
 import { ShowGarages } from '../organisms/search/ShowGarages'
 
 export const SearchPage = () => {
@@ -73,6 +74,9 @@ export const SearchPage = () => {
       </Panel>
       <Panel position="right-center">
         <DefaultZoomControls />
+      </Panel>
+      <Panel position="right-top">
+        <FilterSidebar />
       </Panel>
     </Map>
   )
