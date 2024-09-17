@@ -11,6 +11,7 @@ query SearchGarages(
     garageFilter: $garageFilter
   ) {
     id
+    displayName
     address {
       lat
       lng

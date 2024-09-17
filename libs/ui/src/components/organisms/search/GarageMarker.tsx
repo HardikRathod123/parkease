@@ -1,8 +1,12 @@
+import { FormProviderBookSlot } from '@parkease/forms/src/bookSlot'
+import { FormTypeSearchGarage } from '@parkease/forms/src/searchGarages'
 import { SearchGaragesQuery } from '@parkease/network/src/gql/generated'
 import { useKeypress } from '@parkease/util/hooks/keys'
 import { useState } from 'react'
+import { useWatch } from 'react-hook-form'
 import { Dialog } from '../../atoms/Dialog'
 import { ParkingIcon } from '../../atoms/ParkingIcon'
+import { BookSlotPopup } from '../BookSlotPopup'
 import { Marker } from '../map/MapMarker'
 
 export const GarageMarker = ({
@@ -12,6 +16,8 @@ export const GarageMarker = ({
 }) => {
   const [showPopup, setShowPopup] = useState(false)
   useKeypress(['Escape'], () => setShowPopup(false))
+
+  const { endTime, startTime } = useWatch<FormTypeSearchGarage>()
 
   if (!marker.address?.lat || !marker.address.lng) {
     return null
@@ -25,7 +31,9 @@ export const GarageMarker = ({
         open={showPopup}
         setOpen={setShowPopup}
       >
-        {marker.id}
+        <FormProviderBookSlot defaultValues={{ endTime, startTime }}>
+          <BookSlotPopup garage={marker} />
+        </FormProviderBookSlot>
       </Dialog>
 
       <Marker

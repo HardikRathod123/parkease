@@ -32,7 +32,7 @@ export const useConvertSearchFormToVariables = () => {
 
   const formData = watch()
 
-  const debouncedFormData = useDebounce(formData, 400)
+  const debouncedFormData = useDebounce(formData, 1000)
 
   useEffect(() => {
     const {

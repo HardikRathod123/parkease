@@ -382,13 +382,12 @@ export type CreateAdminInput = {
 export type CreateBookingInput = {
   customerId: Scalars['String']['input']
   endTime: Scalars['DateTime']['input']
-  passcode?: InputMaybe<Scalars['String']['input']>
+  garageId: Scalars['Float']['input']
   phoneNumber?: InputMaybe<Scalars['String']['input']>
   pricePerHour?: InputMaybe<Scalars['Float']['input']>
-  slotId: Scalars['Float']['input']
   startTime: Scalars['DateTime']['input']
-  status: BookingStatus
   totalPrice?: InputMaybe<Scalars['Float']['input']>
+  type: SlotType
   vehicleNumber: Scalars['String']['input']
 }
 
@@ -1394,14 +1393,13 @@ export type UpdateAdminInput = {
 export type UpdateBookingInput = {
   customerId?: InputMaybe<Scalars['String']['input']>
   endTime?: InputMaybe<Scalars['DateTime']['input']>
+  garageId?: InputMaybe<Scalars['Float']['input']>
   id: Scalars['Float']['input']
-  passcode?: InputMaybe<Scalars['String']['input']>
   phoneNumber?: InputMaybe<Scalars['String']['input']>
   pricePerHour?: InputMaybe<Scalars['Float']['input']>
-  slotId?: InputMaybe<Scalars['Float']['input']>
   startTime?: InputMaybe<Scalars['DateTime']['input']>
-  status?: InputMaybe<BookingStatus>
   totalPrice?: InputMaybe<Scalars['Float']['input']>
+  type?: InputMaybe<SlotType>
   vehicleNumber?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -1838,6 +1836,7 @@ export type SearchGaragesQuery = {
   searchGarages: Array<{
     __typename?: 'Garage'
     id: number
+    displayName?: string | null
     images: Array<string>
     address?: {
       __typename?: 'Address'
@@ -2368,6 +2367,7 @@ export const SearchGaragesDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'address' },
