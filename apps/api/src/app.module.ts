@@ -17,6 +17,7 @@ import { GaragesModule } from './models/garages/garages.module'
 import { ManagersModule } from './models/managers/managers.module'
 import { ReviewsModule } from './models/reviews/reviews.module'
 import { SlotsModule } from './models/slots/slots.module'
+import { StripeModule } from './models/stripe/stripe.module'
 import { UsersModule } from './models/users/users.module'
 import { ValetAssignmentsModule } from './models/valet-assignments/valet-assignments.module'
 import { ValetsModule } from './models/valets/valets.module'
@@ -57,6 +58,7 @@ const MAX_AGE = 24 * 60 * 60
     ReviewsModule,
     VerificationsModule,
     UsersModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
