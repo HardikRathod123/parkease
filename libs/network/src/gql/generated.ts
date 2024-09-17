@@ -513,6 +513,11 @@ export type CustomerWhereUniqueInput = {
   uid: Scalars['String']['input']
 }
 
+export type DateFilterInput = {
+  end: Scalars['String']['input']
+  start: Scalars['String']['input']
+}
+
 export type DateTimeFilter = {
   equals?: InputMaybe<Scalars['String']['input']>
   gt?: InputMaybe<Scalars['String']['input']>
@@ -521,6 +526,13 @@ export type DateTimeFilter = {
   lt?: InputMaybe<Scalars['String']['input']>
   lte?: InputMaybe<Scalars['String']['input']>
   notIn?: InputMaybe<Array<Scalars['String']['input']>>
+}
+
+export type EnumSlotTypeFilter = {
+  equals?: InputMaybe<SlotType>
+  in?: InputMaybe<Array<SlotType>>
+  not?: InputMaybe<SlotType>
+  notIn?: InputMaybe<Array<SlotType>>
 }
 
 export type FloatFilter = {
@@ -535,6 +547,7 @@ export type FloatFilter = {
 export type Garage = {
   __typename?: 'Garage'
   address?: Maybe<Address>
+  availableSlots: Array<MinimalSlotGroupBy>
   company: Company
   companyId: Scalars['Int']['output']
   createdAt: Scalars['DateTime']['output']
@@ -545,6 +558,18 @@ export type Garage = {
   slots: Array<Slot>
   updatedAt: Scalars['DateTime']['output']
   verification?: Maybe<Verification>
+}
+
+export type GarageAvailableSlotsArgs = {
+  dateFilter: DateFilterInput
+  slotsFilter?: InputMaybe<SlotWhereInput>
+}
+
+export type GarageFilter = {
+  orderBy?: InputMaybe<Array<GarageOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: InputMaybe<GarageWhereInput>
 }
 
 export type GarageListRelationFilter = {
@@ -615,6 +640,13 @@ export type IntFilter = {
   gte?: InputMaybe<Scalars['Int']['input']>
   lt?: InputMaybe<Scalars['Int']['input']>
   lte?: InputMaybe<Scalars['Int']['input']>
+}
+
+export type LocationFilterInput = {
+  ne_lat: Scalars['Float']['input']
+  ne_lng: Scalars['Float']['input']
+  sw_lat: Scalars['Float']['input']
+  sw_lng: Scalars['Float']['input']
 }
 
 export type LoginInput = {
@@ -688,6 +720,13 @@ export type ManagerWhereInput = {
 
 export type ManagerWhereUniqueInput = {
   uid: Scalars['String']['input']
+}
+
+export type MinimalSlotGroupBy = {
+  __typename?: 'MinimalSlotGroupBy'
+  count: Scalars['Int']['output']
+  pricePerHour: Scalars['Int']['output']
+  type: SlotType
 }
 
 export type Mutation = {
@@ -935,6 +974,7 @@ export type Query = {
   managers: Array<Manager>
   review: Review
   reviews: Array<Review>
+  searchGarages: Array<Garage>
   slot: Slot
   slots: Array<Slot>
   user: User
@@ -1067,6 +1107,13 @@ export type QueryReviewsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>
   take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ReviewWhereInput>
+}
+
+export type QuerySearchGaragesArgs = {
+  dateFilter: DateFilterInput
+  garageFilter?: InputMaybe<GarageFilter>
+  locationFilter: LocationFilterInput
+  slotsFilter?: InputMaybe<SlotWhereInput>
 }
 
 export type QuerySlotArgs = {
@@ -1295,7 +1342,7 @@ export type SlotWhereInput = {
   id?: InputMaybe<IntFilter>
   length?: InputMaybe<IntFilter>
   pricePerHour?: InputMaybe<FloatFilter>
-  type?: InputMaybe<SlotType>
+  type?: InputMaybe<EnumSlotTypeFilter>
   updatedAt?: InputMaybe<DateTimeFilter>
   width?: InputMaybe<IntFilter>
 }
@@ -1779,10 +1826,40 @@ export type CompaniesQuery = {
   }>
 }
 
+export type SearchGaragesQueryVariables = Exact<{
+  dateFilter: DateFilterInput
+  locationFilter: LocationFilterInput
+  slotsFilter?: InputMaybe<SlotWhereInput>
+  garageFilter?: InputMaybe<GarageFilter>
+}>
+
+export type SearchGaragesQuery = {
+  __typename?: 'Query'
+  searchGarages: Array<{
+    __typename?: 'Garage'
+    id: number
+    images: Array<string>
+    address?: {
+      __typename?: 'Address'
+      lat: number
+      lng: number
+      address: string
+    } | null
+    availableSlots: Array<{
+      __typename?: 'MinimalSlotGroupBy'
+      type: SlotType
+      pricePerHour: number
+      count: number
+    }>
+    verification?: { __typename?: 'Verification'; verified: boolean } | null
+  }>
+}
+
 export const namedOperations = {
   Query: {
     GetAuthProvider: 'GetAuthProvider',
     Companies: 'Companies',
+    SearchGarages: 'SearchGarages',
   },
   Mutation: {
     RegisterWithCredentials: 'RegisterWithCredentials',
@@ -2188,3 +2265,176 @@ export const CompaniesDocument = {
     },
   ],
 } as unknown as DocumentNode<CompaniesQuery, CompaniesQueryVariables>
+export const SearchGaragesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'SearchGarages' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'dateFilter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'DateFilterInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'locationFilter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'LocationFilterInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'slotsFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'SlotWhereInput' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'garageFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'GarageFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'searchGarages' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'dateFilter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'dateFilter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'locationFilter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'locationFilter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'slotsFilter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'slotsFilter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'garageFilter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'garageFilter' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'address' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'address' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'images' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'availableSlots' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'dateFilter' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'dateFilter' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'slotsFilter' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'slotsFilter' },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pricePerHour' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'verification' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'verified' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SearchGaragesQuery, SearchGaragesQueryVariables>
