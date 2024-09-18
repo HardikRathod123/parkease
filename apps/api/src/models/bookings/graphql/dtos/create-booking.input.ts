@@ -1,5 +1,6 @@
 import { Field, Float, InputType, PickType } from '@nestjs/graphql'
 import { Garage, SlotType } from '@prisma/client'
+import { CreateValetAssignmentInputWithoutBookingId } from 'src/models/valet-assignments/graphql/dtos/create-valet-assignment.input'
 import { Booking } from '../entity/booking.entity'
 
 @InputType()
@@ -16,4 +17,6 @@ export class CreateBookingInput extends PickType(
   pricePerHour?: number
   @Field(() => Float)
   totalPrice?: number
+
+  valetAssignment?: CreateValetAssignmentInputWithoutBookingId
 }
