@@ -43,6 +43,14 @@ export class CompaniesResolver {
   }
 
   @AllowAuthenticated()
+  @Query(() => Company)
+  myCompany(@GetUser() user: GetUserType) {
+    return this.prisma.company.findFirst({
+      where: { Managers: { some: { uid: user.uid } } },
+    })
+  }
+
+  @AllowAuthenticated()
   @Mutation(() => Company)
   async updateCompany(
     @Args('updateCompanyInput') args: UpdateCompanyInput,

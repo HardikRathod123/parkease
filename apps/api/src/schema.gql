@@ -619,6 +619,7 @@ type Query {
   valet(where: ValetWhereUniqueInput!): Valet!
   companies(distinct: [CompanyScalarFieldEnum!], where: CompanyWhereInput, orderBy: [CompanyOrderByWithRelationInput!], cursor: CompanyWhereUniqueInput, take: Float, skip: Float): [Company!]!
   company(where: CompanyWhereUniqueInput!): Company!
+  myCompany: Company!
   garages(distinct: [GarageScalarFieldEnum!], where: GarageWhereInput, orderBy: [GarageOrderByWithRelationInput!], cursor: GarageWhereUniqueInput, take: Float, skip: Float): [Garage!]!
   garage(where: GarageWhereUniqueInput!): Garage!
   searchGarages(dateFilter: DateFilterInput!, locationFilter: LocationFilterInput!, slotsFilter: SlotWhereInput, garageFilter: GarageFilter): [Garage!]!

@@ -27,3 +27,22 @@ query Companies(
     updatedAt
   }
 }
+
+query myCompany {
+  myCompany {
+    id
+    garages {
+      displayName
+      id
+      description
+      address {
+        id
+        address
+        lat
+        lng
+      }
+    }
+    createdAt
+    displayName
+  }
+}
