@@ -3,6 +3,7 @@ import { MyCompanyDocument } from '@parkease/network/src/gql/generated'
 import { BaseComponent } from '@parkease/util/types'
 import { AlertSection } from '../molecules/AlertSection'
 import { LoaderPanel } from '../molecules/Loader'
+import { CreateCompany } from './CreateCompany'
 
 export const IsManager = ({ children }: BaseComponent) => {
   const { data, loading } = useQuery(MyCompanyDocument)
@@ -15,7 +16,7 @@ export const IsManager = ({ children }: BaseComponent) => {
     return (
       <AlertSection>
         <div>You don&apos;t have a company yet.</div>
-        {/* Todo Create company */}
+        <CreateCompany />
       </AlertSection>
     )
 
