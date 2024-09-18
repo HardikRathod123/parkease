@@ -618,8 +618,8 @@ type Query {
   valets(distinct: [ValetScalarFieldEnum!], where: ValetWhereInput, orderBy: [ValetOrderByWithRelationInput!], cursor: ValetWhereUniqueInput, take: Float, skip: Float): [Valet!]!
   valet(where: ValetWhereUniqueInput!): Valet!
   companies(distinct: [CompanyScalarFieldEnum!], where: CompanyWhereInput, orderBy: [CompanyOrderByWithRelationInput!], cursor: CompanyWhereUniqueInput, take: Float, skip: Float): [Company!]!
-  company(where: CompanyWhereUniqueInput!): Company!
   myCompany: Company!
+  company(where: CompanyWhereUniqueInput!): Company!
   garages(distinct: [GarageScalarFieldEnum!], where: GarageWhereInput, orderBy: [GarageOrderByWithRelationInput!], cursor: GarageWhereUniqueInput, take: Float, skip: Float): [Garage!]!
   garage(where: GarageWhereUniqueInput!): Garage!
   searchGarages(dateFilter: DateFilterInput!, locationFilter: LocationFilterInput!, slotsFilter: SlotWhereInput, garageFilter: GarageFilter): [Garage!]!
@@ -1156,12 +1156,14 @@ input CreateCompanyInput {
   displayName: String
   description: String
   managerId: String!
+  managerName: String
 }
 
 input UpdateCompanyInput {
   displayName: String
   description: String
   managerId: String
+  managerName: String
   id: Float!
 }
 

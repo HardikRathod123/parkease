@@ -25,9 +25,15 @@ export class CompaniesResolver {
     private readonly prisma: PrismaService,
   ) {}
 
-  @AllowAuthenticated('manager')
+  @AllowAuthenticated()
   @Mutation(() => Company)
-  createCompany(@Args('createCompanyInput') args: CreateCompanyInput) {
+  createCompany(
+    @Args('createCompanyInput') args: CreateCompanyInput,
+    @GetUser() user: GetUserType,
+  ) {
+    const managerId = args.managerId
+
+    checkRowLevelPermission(user, managerId)
     return this.companiesService.create(args)
   }
 
@@ -37,17 +43,17 @@ export class CompaniesResolver {
     return this.companiesService.findAll(args)
   }
 
-  @Query(() => Company, { name: 'company' })
-  findOne(@Args() args: FindUniqueCompanyArgs) {
-    return this.companiesService.findOne(args)
-  }
-
   @AllowAuthenticated()
   @Query(() => Company)
   myCompany(@GetUser() user: GetUserType) {
     return this.prisma.company.findFirst({
       where: { Managers: { some: { uid: user.uid } } },
     })
+  }
+
+  @Query(() => Company, { name: 'company' })
+  findOne(@Args() args: FindUniqueCompanyArgs) {
+    return this.companiesService.findOne(args)
   }
 
   @AllowAuthenticated()
