@@ -15,7 +15,7 @@ import { Garage } from 'src/models/garages/graphql/entity/garage.entity'
 import { CreateSlotInput } from './dtos/create-slot.input'
 import { FindManySlotArgs, FindUniqueSlotArgs } from './dtos/find.args'
 import { UpdateSlotInput } from './dtos/update-slot.input'
-import { Slot } from './entity/slot.entity'
+import { ReturnCount, Slot } from './entity/slot.entity'
 import { SlotsService } from './slots.service'
 
 @Resolver(() => Slot)
@@ -40,6 +40,42 @@ export class SlotsResolver {
       garage.Company.Managers.map((manager) => manager.uid),
     )
     return this.slotsService.create(args)
+  }
+
+  @AllowAuthenticated('manager')
+  @Mutation(() => ReturnCount)
+  async createManySlots(
+    @Args('createSlotInput') args: CreateSlotInput,
+    @Args('count', {
+      type: () => Number,
+    })
+    count: number,
+    @GetUser() user: GetUserType,
+  ) {
+    const garage = await this.prisma.garage.findUnique({
+      where: { id: args.garageId },
+      include: {
+        Company: {
+          include: { Managers: true },
+        },
+      },
+    })
+
+    checkRowLevelPermission(
+      user,
+      garage.Company.Managers.map((manager) => manager.uid),
+    )
+
+    const typeCount = await this.prisma.slot.count({
+      where: { garageId: args.garageId, type: args.type },
+    })
+
+    const slots = Array.from({ length: count }).map((num, index) => ({
+      ...args,
+      displayName: `${args.type} ${typeCount + index + 1}`,
+    }))
+
+    return this.prisma.slot.createMany({ data: slots })
   }
 
   @Query(() => [Slot], { name: 'slots' })
