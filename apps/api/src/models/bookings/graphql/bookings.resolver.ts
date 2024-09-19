@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common'
 import {
   Args,
   Mutation,
@@ -62,9 +63,12 @@ export class BookingsResolver {
   async bookingsForGarage(
     @Args()
     { cursor, distinct, orderBy, skip, take, where }: FindManyBookingArgs,
-    @Args('garageId') garageId: number,
     @GetUser() user: GetUserType,
   ) {
+    const garageId = where.Slot.is.garageId.equals
+    if (!garageId) {
+      throw new BadRequestException('Pass garage id in where.Slot.is.garageId')
+    }
     const garage = await this.prisma.garage.findUnique({
       where: { id: garageId },
       include: { Company: { include: { Managers: true } } },
