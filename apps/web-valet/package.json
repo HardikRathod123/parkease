@@ -1,9 +1,9 @@
 {
-  "name": "@parkease/web-manager",
+  "name": "web-valet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3002",
+    "dev": "next dev -p 3003",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,7 +11,6 @@
   "dependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "@parkease/ui": "*",
     "next": "14.2.12"
   },
   "devDependencies": {

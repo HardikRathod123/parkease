@@ -5,9 +5,6 @@ import { SessionProvider } from '@parkease/ui/src/components/molecules/SessionPr
 import { Header } from '@parkease/ui/src/components/organisms/Header'
 import { MenuItem } from '@parkease/util/types'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -29,7 +26,7 @@ export default function RootLayout({
     <SessionProvider>
       <ApolloProvider>
         <html lang="en">
-          <body className={`${inter.className} bg-gray-25`}>
+          <body className="bg-gray-25">
             <Header menuItems={MENUITEMS} />
             <Container> {children}</Container>
           </body>
