@@ -1,5 +1,6 @@
 import { ApolloProvider } from '@parkease/network/src/config/apollo'
 import '@parkease/ui/src/app/globals.css'
+import { Container } from '@parkease/ui/src/components/atoms/Container'
 import { SessionProvider } from '@parkease/ui/src/components/molecules/SessionProvider'
 import { Header } from '@parkease/ui/src/components/organisms/Header'
 import { MenuItem } from '@parkease/util/types'
@@ -28,10 +29,9 @@ export default function RootLayout({
     <SessionProvider>
       <ApolloProvider>
         <html lang="en">
-          <body className={inter.className}>
-            {' '}
+          <body className={`${inter.className} bg-gray-25`}>
             <Header menuItems={MENUITEMS} />
-            {children}
+            <Container> {children}</Container>
           </body>
         </html>
       </ApolloProvider>

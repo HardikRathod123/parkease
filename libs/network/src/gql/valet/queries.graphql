@@ -1,0 +1,5 @@
+fragment ValetFields on Valet {
+  image
+  uid
+  displayName
+}

@@ -1,14 +1,8 @@
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql'
-import { AllowAuthenticated } from 'src/common/auth/auth.decorator'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
+import { checkRowLevelPermission } from 'src/common/auth/util'
 import { PrismaService } from 'src/common/prisma/prisma.service'
-import { Booking } from 'src/models/bookings/graphql/entity/booking.entity'
+import { GetUserType } from 'src/common/types'
 import { BookingTimelinesService } from './booking-timelines.service'
 import { CreateBookingTimelineInput } from './dtos/create-booking-timeline.input'
 import {
@@ -25,12 +19,44 @@ export class BookingTimelinesResolver {
     private readonly prisma: PrismaService,
   ) {}
 
-  @AllowAuthenticated('admin')
+  @AllowAuthenticated('admin', 'manager')
   @Mutation(() => BookingTimeline)
-  createBookingTimeline(
-    @Args('createBookingTimelineInput') args: CreateBookingTimelineInput,
+  async createBookingTimeline(
+    @Args('createBookingTimelineInput')
+    { bookingId, status }: CreateBookingTimelineInput,
+    @GetUser() user: GetUserType,
   ) {
-    return this.bookingTimelinesService.create(args)
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      select: {
+        Slot: {
+          select: {
+            Garage: {
+              select: {
+                Company: {
+                  select: { Managers: { select: { uid: true } } },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+    checkRowLevelPermission(
+      user,
+      booking.Slot.Garage.Company.Managers.map((manager) => manager.uid),
+    )
+
+    const [, bookingTimeline] = await this.prisma.$transaction([
+      this.prisma.booking.update({
+        data: { status: status },
+        where: { id: bookingId },
+      }),
+      this.prisma.bookingTimeline.create({
+        data: { bookingId, managerId: user.uid, status },
+      }),
+    ])
+    return bookingTimeline
   }
 
   @Query(() => [BookingTimeline], { name: 'bookingTimelines' })
@@ -55,12 +81,5 @@ export class BookingTimelinesResolver {
   @Mutation(() => BookingTimeline)
   async removeBookingTimeline(@Args() args: FindUniqueBookingTimelineArgs) {
     return this.bookingTimelinesService.remove(args)
-  }
-
-  @ResolveField(() => Booking)
-  booking(@Parent() bookingTimeline: BookingTimeline) {
-    return this.prisma.booking.findFirst({
-      where: { id: bookingTimeline.bookingId },
-    })
   }
 }
