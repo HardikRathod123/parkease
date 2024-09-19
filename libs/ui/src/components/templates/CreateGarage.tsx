@@ -41,7 +41,7 @@ const CreateGarageContent = () => {
 
   const { uploading, upload } = useCloudinaryUpload()
 
-  const [createGarage, { data, loading }] = useMutation(CreateGarageDocument, {
+  const [createGarage, { loading }] = useMutation(CreateGarageDocument, {
     refetchQueries: [namedOperations.Query.Garages],
     onCompleted: () => {
       reset()
@@ -53,7 +53,7 @@ const CreateGarageContent = () => {
   })
 
   return (
-    <div className="grid md:grid-cols-2 gap-2 m-2 ">
+    <div className="grid md:grid-cols-2 gap-2 mt-2 ">
       <div>
         <Form
           onSubmit={handleSubmit(
@@ -64,7 +64,6 @@ const CreateGarageContent = () => {
               location,
               slotTypes,
             }) => {
-              console.log('data', data)
               const uploadedImages = await upload(images)
 
               await createGarage({

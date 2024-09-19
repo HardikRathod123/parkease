@@ -1,7 +1,11 @@
 import { SearchGaragesQueryVariables } from '@parkease/network/src/gql/generated'
 import { useDebounce } from '@parkease/util/hooks/async'
 import { useEffect, useState } from 'react'
-import { FieldNamesMarkedBoolean, useFormContext } from 'react-hook-form'
+import {
+  FieldNamesMarkedBoolean,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form'
 import { FormTypeSearchGarage } from '../searchGarages'
 import { intFilter } from './util'
 
@@ -30,14 +34,14 @@ export const useConvertSearchFormToVariables = () => {
     watch,
   } = useFormContext<FormTypeSearchGarage>()
 
-  const formData = watch()
+  const formData = useWatch<FormTypeSearchGarage>()
 
   const debouncedFormData = useDebounce(formData, 1000)
 
   useEffect(() => {
     const {
-      endTime,
-      startTime,
+      endTime = '',
+      startTime = '',
       locationFilter,
       length,
       width,
@@ -47,10 +51,17 @@ export const useConvertSearchFormToVariables = () => {
       skip,
       take,
     } = debouncedFormData
+
+    if (!startTime || !endTime || !locationFilter) {
+      return
+    }
+
     const dateFilter: SearchGaragesQueryVariables['dateFilter'] = {
       start: startTime,
       end: endTime,
     }
+
+    const { ne_lat = 0, ne_lng = 0, sw_lat = 0, sw_lng = 0 } = locationFilter
 
     const slotsFilter = createSlotsFilter(dirtyFields, {
       length,
@@ -64,11 +75,13 @@ export const useConvertSearchFormToVariables = () => {
 
     setVariables({
       dateFilter,
-      locationFilter,
+      locationFilter: { ne_lat, ne_lng, sw_lat, sw_lng },
       ...(Object.keys(slotsFilter).length && { slotsFilter }),
       ...(Object.keys(garagesFilter).length && { garagesFilter }),
     })
   }, [debouncedFormData])
+
+  console.log('Hello filters')
 
   return { variables }
 }
