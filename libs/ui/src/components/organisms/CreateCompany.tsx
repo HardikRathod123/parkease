@@ -1,3 +1,4 @@
+'use client'
 import { useMutation } from '@apollo/client'
 import { useFormCreateCompany } from '@parkease/forms/src/createCompany'
 import {

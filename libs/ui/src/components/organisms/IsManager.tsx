@@ -1,3 +1,4 @@
+'use client'
 import { useQuery } from '@apollo/client'
 import { MyCompanyDocument } from '@parkease/network/src/gql/generated'
 import { ReactNode } from 'react'
