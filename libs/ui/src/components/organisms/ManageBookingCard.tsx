@@ -1,4 +1,6 @@
 import { BookingsForGarageQuery } from '@parkease/network/src/gql/generated'
+import { format } from 'date-fns'
+import { Accordion } from '../atoms/Accordion'
 import { TitleStrongValue, TitleValue } from '../atoms/TitleValue'
 import { Reveal } from '../molecules/Reveal'
 import { StartEndDateCard } from './DateCard'
@@ -18,17 +20,34 @@ export const ManageBookingCard = ({ booking }: IManageBookingCardProps) => {
           <TitleValue title={'Slot'}>{booking.slot.displayName}</TitleValue>
         </div>
       </div>
-      <TitleStrongValue title={'Status'}>
-        <div className="font-bold">{booking.status.split('_').join(' ')}</div>
-      </TitleStrongValue>
-
-      <TitleStrongValue title={'Code'}>
-        <Reveal showIntruction={false} secret={booking.passcode || ''} />
-      </TitleStrongValue>
       <StartEndDateCard
         startTime={booking.startTime}
         endTime={booking.endTime}
       />
+      <TitleStrongValue title={'Code'}>
+        <Reveal showIntruction={false} secret={booking.passcode || ''} />
+      </TitleStrongValue>
+
+      <Accordion
+        defaultOpen={false}
+        title={
+          <TitleStrongValue title={'Status'}>
+            <div className="font-bold">
+              {booking.status.split('_').join(' ')}
+            </div>
+          </TitleStrongValue>
+        }
+      >
+        <div className="flex flex-col gap-2">
+          {booking.bookingTimeline.map((timeline) => (
+            <div key={timeline.timestamp}>
+              <TitleValue title={timeline.status}>
+                {format(new Date(timeline.timestamp), 'PPp')}
+              </TitleValue>
+            </div>
+          ))}
+        </div>
+      </Accordion>
     </div>
   )
 }
