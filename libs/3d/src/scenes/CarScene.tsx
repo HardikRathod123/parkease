@@ -1,4 +1,4 @@
-import { OrbitControls, Plane } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera, Plane } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
 import { BuildingSet } from '../components/BuildingSet'
@@ -12,7 +12,19 @@ import {
   roadColor,
 } from '../util/constants'
 
-export const CarScene = () => {
+export const CarScene = ({
+  children,
+  camera,
+  className = 'h-[calc(100vh-2rem)]',
+  orbitControls = true,
+  hideAllComments = false,
+}: {
+  camera?: React.ReactNode
+  children?: React.ReactNode
+  className?: string
+  orbitControls?: boolean
+  hideAllComments?: boolean
+}) => {
   return (
     <Canvas
       style={{
@@ -20,14 +32,28 @@ export const CarScene = () => {
           'linear-gradient(to top right, hsl(0, 0%, 8%), hsl(52, 0%, 18%))',
       }}
     >
-      <OrbitControls
-        minPolarAngle={radians(0)}
-        maxPolarAngle={radians(30)}
-        //   minAzimuthAngle={radians(0)}
-        //   maxAzimuthAngle={radians(270)}
-        minDistance={30}
-        maxDistance={150}
-      />
+      {camera || (
+        <PerspectiveCamera
+          makeDefault
+          fov={60}
+          near={0.1}
+          far={1000}
+          position={[0, 200, 0]}
+          rotation={[radians(60), 0, 0]}
+        />
+      )}
+      {children}
+
+      {orbitControls ? (
+        <OrbitControls
+          minPolarAngle={radians(0)}
+          maxPolarAngle={radians(30)}
+          //   minAzimuthAngle={radians(0)}
+          //   maxAzimuthAngle={radians(270)}
+          minDistance={30}
+          maxDistance={180}
+        />
+      ) : null}
 
       {/* Road */}
 
@@ -47,7 +73,7 @@ export const CarScene = () => {
         startPosition={new THREE.Vector3(WORLD_START, 0, -10)}
         endPosition={new THREE.Vector3(WORLD_END, 0, -10)}
       >
-        <Car forward={false} searching comment />
+        <Car forward={false} searching comment={!hideAllComments && true} />
       </Spawner>
       <Spawner
         spawnInterval={4.3}
@@ -84,7 +110,7 @@ export const CarScene = () => {
       </Spawner>
       {/* My Car */}
       <group position={new THREE.Vector3(0, 0, 10)}>
-        <Car searching comment />
+        <Car searching comment={!hideAllComments && true} />
       </group>
 
       {/* Buildings Left */}
