@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 const MENUITEMS: MenuItem[] = [
   { label: 'Garages', href: '/' },
   { label: 'Admins', href: '/manageAdmins' },
-  { label: 'Settings', href: '/settings' },
 ]
 
 export default function RootLayout({
