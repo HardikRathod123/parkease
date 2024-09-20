@@ -16,8 +16,10 @@ import { AdminsService } from './admins.service'
 import { CreateAdminInput } from './dtos/create-admin.input'
 import { FindManyAdminArgs, FindUniqueAdminArgs } from './dtos/find.args'
 import { UpdateAdminInput } from './dtos/update-admin.input'
+import { AdminWhereInput } from './dtos/where.args'
 import { Admin } from './entity/admin.entity'
 
+@AllowAuthenticated('admin')
 @Resolver(() => Admin)
 export class AdminsResolver {
   constructor(
@@ -25,7 +27,6 @@ export class AdminsResolver {
     private readonly prisma: PrismaService,
   ) {}
 
-  @AllowAuthenticated()
   @Mutation(() => Admin)
   createAdmin(
     @Args('createAdminInput') args: CreateAdminInput,
@@ -64,13 +65,13 @@ export class AdminsResolver {
     return this.adminsService.update(args)
   }
 
-  @AllowAuthenticated()
   @Mutation(() => Admin)
   async removeAdmin(
     @Args() args: FindUniqueAdminArgs,
     @GetUser() user: GetUserType,
   ) {
     const admin = await this.prisma.admin.findUnique(args)
+    console.log('remove admin', user, admin.uid)
     checkRowLevelPermission(user, admin.uid)
     return this.adminsService.remove(args)
   }
@@ -91,6 +92,18 @@ export class AdminsResolver {
   async verificationsCount(@Parent() parent: Admin) {
     return this.prisma.verification.count({
       where: { adminId: parent.uid },
+    })
+  }
+
+  @Query(() => Number, {
+    name: 'adminsCount',
+  })
+  async adminsCount(
+    @Args('where', { nullable: true })
+    where: AdminWhereInput,
+  ) {
+    return this.prisma.admin.count({
+      where,
     })
   }
 }
