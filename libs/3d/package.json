@@ -1,0 +1,11 @@
+{
+  "name": "@parkease/3d",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@react-three/drei": "^9.112.0",
+    "@react-three/fiber": "^8.17.7",
+    "three": "^0.168.0"
+  }
+}
