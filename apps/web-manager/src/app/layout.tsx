@@ -26,7 +26,7 @@ export default function RootLayout({
       <ApolloProvider>
         <html lang="en">
           <body className="bg-gray-25">
-            <Header menuItems={MENUITEMS} />
+            <Header type="manager" menuItems={MENUITEMS} />
             <Container> {children}</Container>
           </body>
         </html>
