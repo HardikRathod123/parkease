@@ -1,6 +1,9 @@
 import { useMutation } from '@apollo/client'
 import { useFormCreateValet } from '@parkease/forms/src/createValet'
-import { CreateValetDocument } from '@parkease/network/src/gql/generated'
+import {
+  CreateValetDocument,
+  namedOperations,
+} from '@parkease/network/src/gql/generated'
 import { useCloudinaryUpload } from '@parkease/util/hooks/cloudinary'
 import { useState } from 'react'
 import { Controller } from 'react-hook-form'
@@ -31,6 +34,8 @@ export const AddValet = () => {
       reset()
       setOpen(false)
     },
+    awaitRefetchQueries: true,
+    refetchQueries: [namedOperations.Query.companyValets],
   })
 
   const { uploading, upload } = useCloudinaryUpload()

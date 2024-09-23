@@ -22,6 +22,8 @@ export const AssignValetButton = ({
     refetchQueries: [
       namedOperations.Query.valetDrops,
       namedOperations.Query.valetPickups,
+      namedOperations.Query.myDropTrips,
+      namedOperations.Query.myPickupTrips,
     ],
     onCompleted(data) {
       toast(`Action successful.
