@@ -1,3 +1,4 @@
+import { BadGatewayException } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { BookingStatus } from '@prisma/client'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
@@ -29,6 +30,10 @@ export class ValetsResolver {
     const company = await this.prisma.company.findFirst({
       where: { Managers: { some: { uid: user.uid } } },
     })
+
+    if (!company) {
+      throw new BadGatewayException('You do not have a company.')
+    }
 
     return this.valetsService.create({ ...args, companyId: company.id })
   }
