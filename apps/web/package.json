@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@parkease/network": "*",
-    "@parkease/sample-lib": "*",
     "@parkease/ui": "*",
     "@stripe/stripe-js": "^4.5.0",
     "@tabler/icons-react": "^3.17.0",
