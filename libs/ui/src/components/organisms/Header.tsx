@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Brand } from '../atoms/Brand'
 import { Button } from '../atoms/Button'
 import { Container } from '../atoms/Container'
+import { Menus } from './Menus'
 import { NavSidebar } from './NavSidebar'
 
 export type IHeaderProps = {
@@ -26,7 +27,13 @@ export const Header = ({ type, menuItems }: IHeaderProps) => {
           </Link>
           <div className="flex items-center gap-2">
             {uid ? (
-              <NavSidebar menuItems={menuItems} />
+              <div className="flex gap-6 items-center">
+                <div className="text-sm mr-6 flex gap-3">
+                  <Menus menuItems={menuItems} />
+                </div>
+
+                <NavSidebar menuItems={menuItems} />
+              </div>
             ) : (
               <>
                 <Link href="/register">
