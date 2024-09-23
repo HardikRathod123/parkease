@@ -3,6 +3,7 @@ import { useFormLogin } from '@parkease/forms/src/login'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Button } from '../atoms/Button'
 import { Form } from '../atoms/Form'
 import { HtmlInput } from '../atoms/HtmlInput'
@@ -11,7 +12,7 @@ import { HtmlLabel } from '../atoms/HtmlLabel'
 export interface ILoginFormProps {
   className?: string
 }
-export const LoginForm = ({}: ILoginFormProps) => {
+export const LoginForm = ({ className }: ILoginFormProps) => {
   const {
     register,
     handleSubmit,
@@ -19,16 +20,21 @@ export const LoginForm = ({}: ILoginFormProps) => {
   } = useFormLogin()
 
   const { replace } = useRouter()
+  const [loading, setLoading] = useState(false)
 
   return (
     <Form
+      className={className}
       onSubmit={handleSubmit(async (data) => {
         const { email, password } = data
-        const result = await signIn('credentials', {
+        setLoading(true)
+
+        const result = await signIn('google', {
           email,
           password,
           redirect: false,
         })
+        setLoading(false)
 
         if (result?.ok) {
           replace('/')
@@ -48,7 +54,9 @@ export const LoginForm = ({}: ILoginFormProps) => {
           placeholder="******"
         />
       </HtmlLabel>
-      <Button type="submit">Submit</Button>
+      <Button type="submit" loading={loading}>
+        Submit
+      </Button>
       <div className="mt-4 text-sm">
         Do not have an parkease account?
         <br />
