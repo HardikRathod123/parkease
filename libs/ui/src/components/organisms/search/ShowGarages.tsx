@@ -10,8 +10,10 @@ import { GarageMarker } from './GarageMarker'
 export const ShowGarages = () => {
   const { variables, debouncing } = useConvertSearchFormToVariables()
 
-  const [searchGarages, { loading: garagesLoading, data, previousData }] =
-    useLazyQuery(SearchGaragesDocument)
+  const [
+    searchGarages,
+    { loading: garagesLoading, data, previousData, error },
+  ] = useLazyQuery(SearchGaragesDocument)
 
   useEffect(() => {
     if (variables) {
@@ -22,6 +24,18 @@ export const ShowGarages = () => {
   const garages = data?.searchGarages || previousData?.searchGarages || []
   const loading = debouncing || garagesLoading
 
+  if (error) {
+    return (
+      <Panel
+        position="center-center"
+        className="bg-white/50 shadow border-white border backdrop-blur-sm"
+      >
+        <div className="flex items-center justify-center gap-2 ">
+          <IconInfoCircle /> <div>{error.message}</div>
+        </div>
+      </Panel>
+    )
+  }
   if (!loading && garages.length === 0) {
     return (
       <Panel

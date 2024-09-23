@@ -13,6 +13,7 @@ import { TotalPrice } from '@parkease/util/types'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { Badge } from '../atoms/Badge'
 import { Button } from '../atoms/Button'
 import { Form } from '../atoms/Form'
@@ -60,7 +61,6 @@ export const BookSlotPopup = ({
     <div className="flex gap-2 text-left border-t-2 border-white bg-white/50 backdrop-blur-sm">
       <Form
         onSubmit={handleSubmit(async (data) => {
-          console.log('formData: ', data)
           if (!uid) {
             alert('You are not logged in.')
             return
@@ -87,16 +87,16 @@ export const BookSlotPopup = ({
               : null),
           }
 
-          setBooking(true)
-          // Create booking session
-          const res = await createBookingSession(
-            uid!,
-            totalPriceObj,
-            bookingData,
-          )
-          console.log('res', res)
-
-          setBooking(false)
+          try {
+            setBooking(true)
+            // Create booking session
+            await createBookingSession(uid!, totalPriceObj, bookingData)
+          } catch (error) {
+            console.log('error: ', error)
+            toast('An error occurred while creating the booking session.')
+          } finally {
+            setBooking(false)
+          }
         })}
       >
         <div className="flex items-start gap-2">
@@ -196,7 +196,6 @@ export const BookSlotPopup = ({
         <HtmlLabel title="Phone number" error={errors.phoneNumber?.message}>
           <HtmlInput placeholder="+910000000000" {...register('phoneNumber')} />
         </HtmlLabel>
-
         <ManageValets garage={garage} />
 
         {totalPriceObj ? (
@@ -231,25 +230,30 @@ export const createBookingSession = async (
   totalPriceObj: TotalPrice,
   bookingData: CreateBookingInput,
 ) => {
-  const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/stripe', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      totalPriceObj,
-      uid,
-      bookingData,
-    }),
-  })
-  const checkoutSession = await response.json()
+  try {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        totalPriceObj,
+        uid,
+        bookingData,
+      }),
+    })
+    const checkoutSession = await response.json()
 
-  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 
-  const stripe = await loadStripe(publishableKey || '')
-  const result = await stripe?.redirectToCheckout({
-    sessionId: checkoutSession.sessionId,
-  })
+    const stripe = await loadStripe(publishableKey || '')
+    const result = await stripe?.redirectToCheckout({
+      sessionId: checkoutSession.sessionId,
+    })
 
-  return result
+    return result
+  } catch (error) {
+    console.error('Error creating booking session:', error)
+    throw error
+  }
 }
