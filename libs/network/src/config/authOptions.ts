@@ -15,7 +15,7 @@ const MAX_AGE = 1 * 24 * 60 * 60
 
 const secureCookies = process.env.NEXTAUTH_URL?.startsWith('https://')
 const hostName = new URL(process.env.NEXTAUTH_URL || '').hostname
-const rootDomain = 'karthicktech.com'
+const rootDomain = 'hardik-tech.com'
 
 export const authOptions: NextAuthOptions = {
   // Configure authentication providers
