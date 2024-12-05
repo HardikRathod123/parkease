@@ -14,6 +14,10 @@
         ]
     },
     "scripts": {
+        "dev": "make dev-all stage=development",
+        "dev:staging": "make dev-all stage=staging",
+        "dev:web": "make dev-web stage=development",
+        "dev:api": "make dev-api stage=development",
         "format": "prettier \"{apps,libs}/**/*.{ts,tsx,js,json}\" --ignore-path .gitignore",
         "format:check": "yarn format --check",
         "format:write": "yarn format --write",
@@ -23,6 +27,7 @@
         "validate": "make validate",
         "prepare": "husky install",
         "recreate:dev": "make recreate_no-seed_no-clean stage=development",
+        "recreate:staging": "make recreate_no-seed_no-clean stage=staging",
         "commit": "yarn cz-customizable",
         "style": "prettier --write '**/*.{js,jsx,ts,tsx}'",
         "cloc": "npx cloc --exclude-dir=node_modules,dist,build,yarn.lock,package.json,generated.tsx,.next,.nx ."

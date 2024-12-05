@@ -6,36 +6,80 @@ NAME_development=parkease-development
 
 BASE_PATH=$(PWD)
 
+create-env-stage:
+	@echo
+	@echo "🚀Moving secrets of $(stage) to .env"
+	@echo
+	@chmod +x ./scripts/create-env.sh
+	@./scripts/create-env.sh "$(PWD)" "$(stage)"
+
 validate:
 	@echo "Validating the codebase"
 	yarn format:write && yarn tsc && yarn lint && yarn build
 
-# This target is used to deploy the services for the specified stage using Docker Compose. The COMPOSE_DOCKER_CLI_BUILD environment variable is set to 1 to enable BuildKit, which is a new feature in Docker that allows for faster and more efficient builds. The BASE_PATH environment variables are set to the base path and the path to the service respectively. The compose file and the project name are determined by the stage.
+dev-all:
+	@echo "Starting all applications..."
+	@npx concurrently \
+		"make dev-web" \
+		"make dev-api" \
+		"make dev-web-admin" \
+		"make dev-web-manager" \
+		"make dev-web-valet"
+
+dev-web:
+	@echo "Starting web app..."
+	@cd apps/web && yarn dev
+
+dev-api:
+	@echo "Starting API..."
+	@echo "NODE_ENV=$(stage) yarn dev"
+	@cd apps/api && NODE_ENV=$(stage) yarn dev
+
+dev-web-admin:
+	@echo "Starting web admin..."
+	@cd apps/web-admin && yarn dev
+
+dev-web-manager:
+	@echo "Starting web manager..."
+	@cd apps/web-manager && yarn dev
+
+dev-web-valet:
+	@echo "Starting web valet..."
+	@cd apps/web-valet && yarn dev
+
+dev-frontend:
+	@echo "Starting frontend apps..."
+	@npx concurrently \
+		"make dev-web" \
+		"make dev-web-admin" \
+		"make dev-web-manager" \
+		"make dev-web-valet"
+
+dev-backend:
+	@echo "Starting backend..."
+	@make dev-api
+
 deploy:
 	@echo
 	@echo "🚀Deploying $(stage) services"
 	@echo
 	@COMPOSE_DOCKER_CLI_BUILD=1 BASE_PATH=$(BASE_PATH) docker-compose -f $(COMPOSE_FILE_$(stage)) -p $(NAME_$(stage)) up -d
 
-# This code is used to restart a service in a given stage
-# The stage parameter can be any of the following: dev, test, prod
-# The service parameter can be any of the following: api, db, redis, frontend
-# The command to run this code is: make restart stage=dev service=api
 restart:
 	@echo
 	@echo "🔁Restart $(stage) service"
 	@echo
 	@COMPOSE_DOCKER_CLI_BUILD=1 BASE_PATH=$(BASE_PATH) HBP_C_PATH=$(HBP_C_PATH) docker compose -f $(COMPOSE_FILE_$(stage)) -p $(NAME_$(stage)) restart $(service)
 
-# This function is used to setup apps with the development environment and deploy services as docker containers.
 recreate_no-seed_no-clean:
-# @$(MAKE) --no-print-directory git-clean
+	@$(MAKE) --no-print-directory create-env-stage
 	@echo "Installing dependencies"
-	@pnpm install
-# @$(MAKE) --no-print-directory decrypt-envs-stage
-# @$(MAKE) --no-print-directory create-env-stage
+	@yarn install
 	@echo
 	@echo "🧹Deleting $(stage) services"
 	@echo
-	@COMPOSE_DOCKER_CLI_BUILD=1 BASE_PATH=$(BASE_PATH) HBP_C_PATH=$(HBP_C_PATH) docker compose -f $(COMPOSE_FILE_$(stage)) -p $(NAME_$(stage)) down
+	# Below script does not work due to prisma
+	# @COMPOSE_DOCKER_CLI_BUILD=1 BASE_PATH=$(BASE_PATH) HBP_C_PATH=$(HBP_C_PATH) docker compose -f $(COMPOSE_FILE_$# ##(stage)) -p $(NAME_$(stage)) down
+	@echo starting docker container
+	@cd apps/api && docker-compose up -d
 	@$(MAKE) --no-print-directory deploy
